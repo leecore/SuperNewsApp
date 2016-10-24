@@ -15,8 +15,12 @@ import android.widget.Toast;
 
 import cn.jpush.android.api.InstrumentedActivity;
 import cn.jpush.android.api.JPushInterface;
- import  com.by.supernewsapp.R;
+import cn.jpush.android.api.TagAliasCallback;
 
+import  com.by.supernewsapp.R;
+
+import java.util.Set;
+import java.util.TreeSet;
 
 
 public class MainActivity extends InstrumentedActivity implements OnClickListener{
@@ -34,8 +38,20 @@ public class MainActivity extends InstrumentedActivity implements OnClickListene
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+
 		initView();   
 		registerMessageReceiver();  // used for receive msg
+
+		//注册当前设备，设置标签，标签可以多个，别名 只有一个
+		TreeSet<String> tags = new TreeSet<>();
+		tags.add("IT男");
+		tags.add("中年大叔");
+		JPushInterface.setTags(this, tags, new TagAliasCallback() {
+			@Override
+			public void gotResult(int i, String s, Set<String> set) {
+
+			}
+		});
 	}
 	
 	private void initView(){

@@ -27,11 +27,14 @@ public class MyReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
         Bundle bundle = intent.getExtras();
 		Log.d(TAG, "[MyReceiver] onReceive - " + intent.getAction() + ", extras: " + printBundle(bundle));
-		
+		// !!!!极光推送在接收消息之前，必须要客户端和推送服务器进行注册
+		//相当于注意一个聊天的ID，当客户端注册成功，就会接收这个消息
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
             String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
             Log.d(TAG, "[MyReceiver] 接收Registration Id : " + regId);
             //send the Registration Id to your server...
+
+			// TODO:等有后天服务器的时候，必须把这个ID和当前用户信息绑定在一起
                         
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
         	Log.d(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
@@ -97,7 +100,12 @@ public class MyReceiver extends BroadcastReceiver {
 		}
 		return sb.toString();
 	}
-	
+
+	/**
+	 * 处理自定义的消息，不会显示在手机通知栏，直接在后天悄悄执行
+	 * @param context
+	 * @param bundle
+     */
 	//send msg to MainActivity
 	private void processCustomMessage(Context context, Bundle bundle) {
 		if (MainActivity.isForeground) {
